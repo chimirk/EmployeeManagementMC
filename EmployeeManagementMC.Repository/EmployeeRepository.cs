@@ -1,6 +1,6 @@
 ﻿namespace EmployeeManagementMC.Repository
 {
-    public class Class1
+    public class EmployeeRepository
     {
 
     }
