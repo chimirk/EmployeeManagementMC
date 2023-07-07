@@ -16,29 +16,29 @@ namespace EmployeeManagementMC.Core.Employees
         {
             _employeeRepository = employeeRepository;
         }
-        public Task<EmployeeInsertResponseModel> AddNewEmployeeRecordAsync(EmployeeInsertRequestModel request)
+        public async Task<EmployeeInsertResponseModel> AddNewEmployeeRecordAsync(EmployeeInsertRequestModel request)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.AddNewEmployeeRecordAsync(request);
         }
 
-        public Task DeleteEmployeeRecordAsync(Guid id)
+        public async Task DeleteEmployeeRecordAsync(Guid id)
         {
-            throw new NotImplementedException();
+            await _employeeRepository.DeleteEmployeeRecordAsync(id);
         }
 
-        public Task<IList<EmployeeLookupResponseModel>> EmployeesLookupAsync(EmployeeLookupRequestModel request)
+        public async Task<IList<EmployeeLookupResponseModel>> EmployeesLookupAsync(EmployeeLookupRequestModel request)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.EmployeesLookupAsync(request);
         }
 
-        public Task<EmployeeLookupResponseModel> GetEmployeeByIdAsync(Guid id)
+        public async Task<EmployeeLookupResponseModel> GetEmployeeByIdAsync(Guid id)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.GetEmployeeByIdAsync(id);
         }
 
-        public Task<EmployeeInsertResponseModel> UpdateEmployeeRecordAsync(Guid id, EmployeeInsertRequestModel request)
+        public async Task<EmployeeInsertResponseModel> UpdateEmployeeRecordAsync(Guid id, EmployeeInsertRequestModel request)
         {
-            throw new NotImplementedException();
+            return await _employeeRepository.UpdateEmployeeRecordAsync(id, request);
         }
     }
 }
