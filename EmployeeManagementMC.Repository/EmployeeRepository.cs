@@ -1,4 +1,4 @@
-﻿
+﻿using Dapper;
 using EmployeeManagementMC.Repository.Abstract;
 using EmployeeManagementMC.Repository.Configuration;
 using EmployeeManagementMC.Repository.Common;
@@ -6,18 +6,20 @@ using EmployeeManagementMC.Repository.Models;
 using Microsoft.Extensions.Options;
 using System.Data.SqlClient;
 using System.Data;
-using System.Data.SqlClient;
 using System.Text;
+using EmployeeManagementMC.Repository.Dapper;
 
 namespace EmployeeManagementMC.Repository
 {
     public class EmployeeRepository : IEmployeeRepository
     {
         private readonly ConnectionStringsOptions _connectionStringsOptions;
+        private readonly IDapperContext _dapperContext;
 
-        public EmployeeRepository(IOptions<ConnectionStringsOptions> connectionStringsOptions)
+        public EmployeeRepository(IOptions<ConnectionStringsOptions> connectionStringsOptions, IDapperContext context)
         {
             _connectionStringsOptions = connectionStringsOptions.Value;
+            _dapperContext = context;
         }
         public async Task<EmployeeInsertResponseModel> AddNewEmployeeRecordAsync(EmployeeInsertRequestModel request)
         {
@@ -147,7 +149,18 @@ namespace EmployeeManagementMC.Repository
             if (id == Guid.Empty)
                 throw new ApplicationException("This was an exception thrown on purpose.");
 
-            using (var connection = new SqlConnection(_connectionStringsOptions.AdoConnectionString))
+            var query = BuildGetEmployeeByIDQuery();
+            var parameters = new DynamicParameters();
+            parameters.Add("IdParam", id, DbType.Guid);
+
+            // using Dapper to get Employee Info by a specific Id
+            using (var connection = _dapperContext.CreateConnection())
+            {
+                var employee = await connection.QuerySingleOrDefaultAsync<EmployeeLookupResponseModel>(query, parameters);
+                return employee;
+            }
+
+            /*using (var connection = new SqlConnection(_connectionStringsOptions.DapperConnectionString))
             {
                 connection.Open();
 
@@ -176,7 +189,7 @@ namespace EmployeeManagementMC.Repository
                     }
                     return employee;
                 }
-            }
+            }*/
         }
 
         public async Task<EmployeeInsertResponseModel> UpdateEmployeeRecordAsync(Guid id, EmployeeInsertRequestModel request)
